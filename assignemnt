@@ -1,0 +1,28 @@
+--> create three models , Employee , Departmet , Address
+
+
+
+--> employee has dept and has addresses
+
+---------------------------> configure the beans accordingly 
+
+
+print the deatils of employeee
+
+2)-----------------------------------------------------now 
+
+configue 2 employee beans in the spring container 
+
+
+NOTE : in the above assignments use
+
+Setter injection 
+Constructor Injection
+Bean wiring 
+auto wiring 
+inner beans 
+as and when required
+
+
+
+
