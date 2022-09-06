@@ -1,0 +1,104 @@
+package com.demo.springcoremodule;
+
+import java.util.Arrays;
+
+public class Book {
+
+	int isbn;
+	String name;
+	String[] volumes;
+	public String[] getVolumes() {
+		return volumes;
+	}
+	public void setVolumes(String[] volumes) {
+		this.volumes = volumes;
+	}
+	public int getIsbn() {
+		return isbn;
+	}
+	public void setIsbn(int isbn) {
+		System.out.println("setter");
+		this.isbn = isbn;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Book() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Book(String name,int isbn) {
+		super();
+		System.out.println("const with args str(name) , int(isbn)");
+		this.isbn = isbn;
+		this.name = name;
+	}
+	
+	public Book(int isbn, String name) {
+		super();
+		System.out.println("this is my cont");
+		System.out.println("const with args int(isbn) ,str(name)");
+		this.isbn = isbn;
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Book [isbn=" + isbn + ", name=" + name + ", volumes=" + Arrays.toString(volumes) + "]";
+	}
+	
+	
+	
+	
+}
+
+
+
+-----------------------------xml 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+<bean id="book" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="50"></property>
+<property name="name" value="My First World Cup"></property>
+<property name="volumes">
+<array>
+<value> 1 in Lords </value>
+<value> 2 in wankhede</value>
+<value> 3 chinnaswami</value>
+
+</array>
+
+</property>
+</bean> 
+
+
+<bean id="library" class="com.demo.springcoremodule.Library">
+<property name="libraryName" value="Central Library"> </property>
+<property name="address" value="m.g road bangalore"></property>
+
+<property name="book" ref="book">
+</property>
+
+</bean>
+
+
+
+
+ <context:annotation-config/>  
+</beans>
+
+
+
+
+
