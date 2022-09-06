@@ -1,0 +1,205 @@
+--------------book 
+
+package com.demo.springcoremodule;
+
+import java.util.Arrays;
+
+public class Book {
+
+	int isbn;
+	String name;
+	public int getIsbn() {
+		return isbn;
+	}
+	public void setIsbn(int isbn) {
+		System.out.println("setter");
+		this.isbn = isbn;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Book() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Book(String name,int isbn) {
+		super();
+		System.out.println("const with args str(name) , int(isbn)");
+		this.isbn = isbn;
+		this.name = name;
+	}
+	
+	public Book(int isbn, String name) {
+		super();
+		System.out.println("this is my cont");
+		System.out.println("const with args int(isbn) ,str(name)");
+		this.isbn = isbn;
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Book [isbn=" + isbn + ", name=" + name + "]";
+	}
+	
+	
+	
+	
+}
+
+-------------------------------------------------library
+
+package com.demo.springcoremodule;
+
+import java.util.Arrays;
+
+public class Library {
+
+	private String libraryName;
+	private String address;
+	private Book[] books;
+	
+	
+	@Override
+	public String toString() {
+		return "Library [libraryName=" + libraryName + ", address=" + address + ", books=" + Arrays.toString(books)
+				+ "]";
+	}
+	public Library(String libraryName, String address, Book[] books) {
+		super();
+		this.libraryName = libraryName;
+		this.address = address;
+		this.books = books;
+	}
+	public Book[] getBooks() {
+		return books;
+	}
+	public void setBooks(Book[] books) {
+		this.books = books;
+	}
+	public String getLibraryName() {
+		return libraryName;
+	}
+	public void setLibraryName(String libraryName) {
+		this.libraryName = libraryName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	//no arg const - arg const - getter setter - tostring
+	
+	
+	public Library() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+	
+	
+}
+
+-------------------------------------------xml 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+<bean id="book" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="50"></property>
+<property name="name" value="My First World Cup"></property>
+</bean> 
+
+<bean id="book1" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="51"></property>
+<property name="name" value="My First World Cup"></property>
+</bean> 
+
+<bean id="book2" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="52"></property>
+<property name="name" value="My First World Cup"></property>
+</bean> 
+
+
+
+<bean id="library" class="com.demo.springcoremodule.Library">
+<property name="libraryName" value="Central Library"> </property>
+<property name="address" value="m.g road bangalore"></property>
+
+<property name="books">
+
+<list> 
+<ref bean="book"/>
+<ref bean="book1"/>
+<ref bean="book2"/>
+<bean id="book3" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="53"></property>
+<property name="name" value="My inner bean First World Cup"></property>
+</bean> 
+
+</list>
+
+</property>
+
+</bean>
+
+
+
+
+ <context:annotation-config/>  
+</beans>
+
+
+-----------------main 
+
+package com.demo.springcoremodule;
+
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.FileSystemResource;
+
+public class MySprDemo {
+
+	public static void main(String[] args) {
+
+		BeanFactory factory=new XmlBeanFactory(new FileSystemResource("spring2.xml"));		
+		//Book book=(Book)factory.getBean("book3");
+		//System.out.println(book);
+
+		
+		Library library=factory.getBean(Library.class);
+		
+		//System.out.println(library.getLibraryName());
+		
+		System.out.println(library);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
