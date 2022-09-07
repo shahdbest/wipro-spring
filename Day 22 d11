@@ -1,0 +1,126 @@
+package anygroupid.wiprocc_sprjavabased.model;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+
+public class Library {
+
+	
+	String libraryName;
+	@Autowired		
+	Book book;
+
+	
+	public Library() {
+		// TODO Auto-generated constructor stub
+		System.out.println("library const def");
+
+	}
+	
+	
+	
+	@PostConstruct
+	public void myInit(){
+		System.out.println("bean init method");
+	}
+
+	
+	public Library(String libraryName, Book book) {
+		super();
+		System.out.println("library const args");
+
+		this.libraryName = libraryName;
+		this.book = book;
+	}
+
+
+	public Library( Book book) {
+		super();
+		System.out.println("library const args book");
+
+
+		this.book = book;
+	}
+
+	
+	public String getLibraryName() {
+		return libraryName;
+	}
+
+	
+	
+	public void setLibraryName(String libraryName) {
+		
+		this.libraryName = libraryName;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+	
+
+//	@Qualifier("mybook")
+	//@Autowired
+	
+	
+	public void setBook(Book book) {
+		System.out.println("set Book setter called");
+		this.book = book;
+	}
+
+	@Override
+	public String toString() {
+		return "Library [libraryName=" + libraryName + ", book=" + book + "]";
+	}
+	
+	
+
+}
+
+
+
+----------------------------------------
+
+
+package anygroupid.wiprocc_sprjavabased.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+import anygroupid.wiprocc_sprjavabased.model.Book;
+import anygroupid.wiprocc_sprjavabased.model.Library;
+
+@Configuration
+public class MyAppConfig {
+
+	
+	//If bean name is not given method name is the bean name 
+	@Bean(name = "book")
+	public Book getBook()
+	{
+		return new Book("My Last WorldCup", 55);
+	}
+	
+	@Bean(name = "mybook1")
+	public Book getBook1()
+	{
+		return new Book("My First WorldCup", 55);
+	}
+	
+	
+	
+	@Scope("prototype")
+	@Bean(name = "mylibrary")
+	public Library getLibrary()
+	{
+		Library library=new Library("",null);
+		library.setLibraryName("central");
+		//lib
+		return  library;
+	}
+	
+}
