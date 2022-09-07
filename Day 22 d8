@@ -1,0 +1,52 @@
+package anygroupid.wiprocc_sprjavabased.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import anygroupid.wiprocc_sprjavabased.model.Book;
+
+@Configuration
+public class MyAppConfig {
+
+	
+	//If bean name is not given method name is the bean name 
+	@Bean(name = "mybook")
+	public Book getBook()
+	{
+		return new Book("My Last WorldCup", 55);
+	}
+}
+
+
+
+----------------service
+
+
+package anygroupid.wiprocc_sprjavabased.service;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import anygroupid.wiprocc_sprjavabased.configuration.MyAppConfig;
+import anygroupid.wiprocc_sprjavabased.model.Book;
+
+public class BookService {
+
+	public static void main(String[] args) {
+	
+		
+		ApplicationContext factory=new AnnotationConfigApplicationContext(MyAppConfig.class);
+		//Book book= factory.getBean(Book.class);
+		//System.out.println(book);
+
+	
+		//Book book=(Book)factory.getBean("book");
+		//Book book=(Book)factory.getBean("getBook");
+		
+		Book book=(Book)factory.getBean("mybook");
+		System.out.println(book);
+
+	
+	}
+
+}
