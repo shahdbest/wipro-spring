@@ -1,0 +1,84 @@
+package anygroupid.wiprocc_sprjavabased.model;
+
+public class Book {
+
+	private String name;
+	private int isbn;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getIsbn() {
+		return isbn;
+	}
+	public void setIsbn(int isbn) {
+		this.isbn = isbn;
+	}
+	
+	public Book() {
+		// TODO Auto-generated constructor stub
+	}
+	public Book(String name, int isbn) {
+		super();
+		this.name = name;
+		this.isbn = isbn;
+	}
+	@Override
+	public String toString() {
+		return "Book [name=" + name + ", isbn=" + isbn + "]";
+	}
+	
+	
+}
+
+
+-------------------------------------config 
+
+package anygroupid.wiprocc_sprjavabased.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import anygroupid.wiprocc_sprjavabased.model.Book;
+
+@Configuration
+public class MyAppConfig {
+
+	@Bean
+	public Book getBook()
+	{
+		return new Book("My Last WorldCup", 55);
+	}
+}
+
+
+
+-----------------------------service
+ 
+ 
+ package anygroupid.wiprocc_sprjavabased.service;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import anygroupid.wiprocc_sprjavabased.configuration.MyAppConfig;
+import anygroupid.wiprocc_sprjavabased.model.Book;
+
+public class BookService {
+
+	public static void main(String[] args) {
+	
+		
+		ApplicationContext factory=new AnnotationConfigApplicationContext(MyAppConfig.class);
+		
+		Book book= factory.getBean(Book.class);
+
+		System.out.println(book);
+	}
+
+}
+
+
+
