@@ -1,0 +1,110 @@
+package com.demo.springcoremodule;
+
+public class Library {
+
+	private String libraryName;
+	private String address;
+	private Book book;
+	
+	
+	public void myInit()
+	{
+		System.out.println("library bean being initilized");
+		
+		
+	}
+	
+	
+	public String getLibraryName() {
+		return libraryName;
+	}
+	public void setLibraryName(String libraryName) {
+		this.libraryName = libraryName;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Book getBook() {
+		return book;
+	}
+	public void setBook(Book book) {
+	
+		System.out.println("book setter");
+		this.book = book;
+	}
+	
+	//no arg const - arg const - getter setter - tostring
+	
+	
+	public Library() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Library(Book book) {
+	
+		System.out.println("const with 1 arg book ");
+		this.book=book;
+	}
+	
+	public Library(String libraryName, String address, Book book) {
+		super();
+		System.out.println("const with 3 arg book ");
+		
+		this.libraryName = libraryName;
+		this.address = address;
+		this.book = book;
+	}
+	
+	public Library(String libraryName, String address) {
+		super();
+		System.out.println("const with 2 name , address ");
+		
+		this.libraryName = libraryName;
+		this.address = address;
+	
+	}
+	
+	@Override
+	public String toString() {
+		return "Library [libraryName=" + libraryName + ", address=" + address + ", book=" + book + "]";
+	}
+	
+	
+	
+	
+}
+
+
+
+------------------------------xml 
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:context="http://www.springframework.org/schema/context"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+<bean id="book1" class="com.demo.springcoremodule.Book">
+<property name="isbn" value="50"></property>
+<property name="name" value="My First World Cup"></property>
+</bean> 
+
+
+
+<bean id="library" class="com.demo.springcoremodule.Library" autowire="constructor" scope="prototype" init-method="myInit">
+<constructor-arg name="libraryName" value="Central Library"> </constructor-arg>
+<constructor-arg name="address" value="m.g road bangalore"></constructor-arg>
+</bean>
+
+
+ <context:annotation-config/>  
+</beans>
+
