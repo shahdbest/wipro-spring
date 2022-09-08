@@ -1,0 +1,24 @@
+--> create a student model with whatever properties u want 
+  
+  -> age
+  ->division  A/B/C/D
+  ->sem
+  ->marks
+  
+  --------------------------------------------------
+  
+  -> add new stud to list of studs
+  -> delete student based on name 
+  -> delete stud based on sem
+  -> get stud by div
+  -> get stud by sem
+  -> get stud with marks greater dan d given marks
+  -> update student
+  
+
+
+
+
+
+
+
