@@ -1,0 +1,121 @@
+package com.example.wiprob5RestApi;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import com.example.wiprob5RestApi.model.Book;
+
+@SpringBootApplication
+public class Wiprob5RestApiApplication {
+
+	
+	public static void main(String[] args) {
+	
+
+		SpringApplication.run(Wiprob5RestApiApplication.class, args);
+			
+	}
+
+	
+	
+}
+
+
+---------------------------------------controller 
+
+
+package com.example.wiprob5RestApi.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.wiprob5RestApi.model.Book;
+
+@RestController
+@RequestMapping("books")
+public class MyController {
+
+	//http://localhost:1234/books/request
+	@GetMapping("/request")
+	public String hello()
+	{
+		return "hello world";
+	}
+	
+
+	//http://localhost:1234/books/test
+	@GetMapping("/test")
+	public String hello1()
+	{
+		return "hello world test";
+	}
+	
+	//http://localhost:1234/books
+	@GetMapping()
+	public Book getBook()
+	{
+		return new Book("Rest APIDevelopment", 44);
+	}
+	
+	
+	
+}
+
+
+--------------------model 
+
+package com.example.wiprob5RestApi.model;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Book {
+
+	String name;
+	int isbn;
+	
+	public Book() {
+	
+		name="test app";
+		System.out.println("book const");
+	}
+
+	public Book(String name, int isbn) {
+		super();
+		this.name = name;
+		this.isbn = isbn;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(int isbn) {
+		this.isbn = isbn;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [name=" + name + ", isbn=" + isbn + "]";
+	}
+	
+}
+
+-----------application.properties
+
+server.port=1234
+
+
+
+
