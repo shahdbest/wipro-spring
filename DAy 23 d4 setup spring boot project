@@ -1,0 +1,20 @@
+https://start.spring.io/
+
+dependencies 
+web
+
+artifactId 
+
+select java 8 
+
+download
+
+--------
+open exclipse
+import 
+general 
+project from folder or archive
+archive
+select the downloaded folder 
+check only maven project
+finish
