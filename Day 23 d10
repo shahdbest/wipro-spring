@@ -1,0 +1,123 @@
+package com.example.restapi.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.restapi.model.Product;
+
+@RestController
+@RequestMapping("products")
+public class ProductController {
+
+	
+	ArrayList<Product> products=new ArrayList<>();
+	
+	ProductController()
+	{
+		
+		products.add(new Product(1,500,1,"book"));
+		products.add(new Product(2,200,1,"pen"));
+		products.add(new Product(3,100,1,"sharpner"));
+		products.add(new Product(4,300,1,"pencil"));
+	}
+	
+	
+	@GetMapping
+	public ResponseEntity<List<Product>> getProducts()
+	{
+		return new ResponseEntity<List<Product>>(products,HttpStatus.FOUND);
+	}
+	
+	
+	@GetMapping("{productName}")
+	public ResponseEntity<Product> getProduct(@PathVariable String productName)
+	{
+		System.out.println(productName);
+		
+		for(Product p:products)
+		{
+			if(p.getName().equals(productName))
+				return new ResponseEntity<Product>(p,HttpStatus.FOUND);
+		}
+		
+		Product p=new Product();
+		return new ResponseEntity<Product>(p,HttpStatus.NOT_FOUND);
+	}
+	
+	
+	@PostMapping
+	public ResponseEntity<Product> postProduct(@RequestBody Product product){
+		products.add(product);
+		return new ResponseEntity<Product>(product,HttpStatus.CREATED);
+	}
+
+	//http://localhost:1234/products/1
+	@DeleteMapping("{prodId}")
+	public ResponseEntity<Product> deleteProduct(@PathVariable int prodId){
+		Product deletedProduct=new Product();
+		for(Product p:products)
+		{
+			if(p.getProdId()==prodId)
+			{
+				deletedProduct=p;
+				products.remove(deletedProduct);
+				return new ResponseEntity<Product>(deletedProduct,HttpStatus.OK);
+			}
+		
+		}
+		deletedProduct.setName("product Not Found");
+		return new ResponseEntity<Product>(deletedProduct,HttpStatus.OK);
+	}
+	
+	//http://localhost:1234/products/name/book
+	@DeleteMapping("name/{name}")
+	public ResponseEntity<Product> deleteProduct(@PathVariable String name){
+		Product deletedProduct=new Product();
+		for(Product p:products)
+		{
+			if(p.getName().equals(name))
+			{
+				deletedProduct=p;
+				products.remove(deletedProduct);
+				return new ResponseEntity<Product>(deletedProduct,HttpStatus.OK);
+			}
+		
+		}
+		deletedProduct.setName("product Not Found");
+		return new ResponseEntity<Product>(deletedProduct,HttpStatus.OK);
+	}
+	
+	
+	
+	
+	@PutMapping
+	public ResponseEntity<Product> updateProduct(@RequestBody Product product){
+		Product p1=new Product();
+		for(Product p:products)
+		{
+			if(p.getProdId()==product.getProdId())
+			{
+				products.remove(p);
+				products.add(product);
+					
+				return new ResponseEntity<Product>(product,HttpStatus.OK);
+			}
+		
+		}
+		p1.setName("product Not Found");
+		return new ResponseEntity<Product>(p1,HttpStatus.OK);
+	}
+	
+	
+}
