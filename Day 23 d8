@@ -1,0 +1,134 @@
+package com.example.restapi.model;
+
+public class Product {
+
+	int prodId;
+	float price;
+	int qty;
+	String name;
+	
+public Product() {
+	// TODO Auto-generated constructor stub
+}
+
+public Product(int prodId, float price, int qty, String name) {
+	super();
+	this.prodId = prodId;
+	this.price = price;
+	this.qty = qty;
+	this.name = name;
+}
+
+public int getProdId() {
+	return prodId;
+}
+
+public void setProdId(int prodId) {
+	this.prodId = prodId;
+}
+
+public float getPrice() {
+	return price;
+}
+
+public void setPrice(float price) {
+	this.price = price;
+}
+
+public int getQty() {
+	return qty;
+}
+
+public void setQty(int qty) {
+	this.qty = qty;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+@Override
+public String toString() {
+	return "Product [prodId=" + prodId + ", price=" + price + ", qty=" + qty + ", name=" + name + "]";
+}
+
+
+	
+}
+
+
+-----------------------controller
+
+
+
+package com.example.restapi.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.restapi.model.Product;
+
+@RestController
+@RequestMapping("products")
+public class ProductController {
+
+	
+	ArrayList<Product> products=new ArrayList<>();
+	
+	ProductController()
+	{
+		
+		products.add(new Product(1,500,1,"book"));
+		products.add(new Product(2,200,1,"pen"));
+		products.add(new Product(3,100,1,"sharpner"));
+		products.add(new Product(4,300,1,"pencil"));
+	}
+	
+	
+	@GetMapping
+	public ResponseEntity<List<Product>> getProducts()
+	{
+		return new ResponseEntity<List<Product>>(products,HttpStatus.FOUND);
+	}
+	
+	
+	@GetMapping("{productName}")
+	public ResponseEntity<Product> getProduct(@PathVariable String productName)
+	{
+		System.out.println(productName);
+		
+		for(Product p:products)
+		{
+			if(p.getName().equals(productName))
+				return new ResponseEntity<Product>(p,HttpStatus.FOUND);
+		}
+		
+		Product p=new Product();
+		return new ResponseEntity<Product>(p,HttpStatus.NOT_FOUND);
+	}
+	
+}
+
+
+
+------------------------
+all products 
+
+http://localhost:1234/products/
+
+
+search product
+http://localhost:1234/products/book 
+
