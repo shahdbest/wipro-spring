@@ -1,0 +1,62 @@
+package com.example.restapi.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.restapi.model.Product;
+
+@RestController
+@RequestMapping("products")
+public class ProductController {
+
+	//NOte : while u r given the response to the end user ensure u give response Entity
+	
+	
+	//http://localhost:1234/products
+	@GetMapping
+	public ResponseEntity<String> msg()
+	{
+		return new ResponseEntity<String>("get Mapping",HttpStatus.FOUND);
+	}
+	
+	//http://localhost:1234/products/abc
+	@GetMapping("/abc")
+//	public Product msg2()
+//	{
+//		return new Product(4, 1000, 1, "Petrol");
+//	}
+
+	
+	public ResponseEntity<Product> msgs2()
+	{
+		return new ResponseEntity<Product>(new Product(4, 1000, 1, "Petrol"),HttpStatus.FOUND);
+	}
+	
+	
+	
+	
+	
+	//http://localhost:1234/products/name/rajesh
+	@GetMapping("/name/{username}")
+	public String msg2(@PathVariable String username)
+	{
+		return "get Mapping welcome "+username;
+	}
+
+	
+	
+	//http://localhost:1234/products
+	@PostMapping
+	public String postmsg()
+	{
+		return "post Mapping";
+	}
+
+	
+		
+}
