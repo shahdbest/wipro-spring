@@ -1,0 +1,144 @@
+package anygroupid.wiprocc_sprjavabased.model;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+public class Library {
+
+	
+	String libraryName;
+	
+	@Autowired
+	Book book;
+
+	@Autowired
+	Address address;
+	
+
+
+
+
+	public Address getAddress() {
+		return address;
+	}
+
+
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+
+
+	public Library() {
+		// TODO Auto-generated constructor stub
+		System.out.println("library const def");
+
+	}
+	
+	
+	
+	public Library(String libraryName, Book book) {
+		super();
+		System.out.println("library const args");
+
+		this.libraryName = libraryName;
+		this.book = book;
+	}
+
+
+	public Library( Book book) {
+		super();
+		System.out.println("library const args book");
+
+
+		this.book = book;
+	}
+
+	
+	public String getLibraryName() {
+		return libraryName;
+	}
+
+	
+	
+	public void setLibraryName(String libraryName) {
+		
+		this.libraryName = libraryName;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+	
+	public void setBook(Book book) {
+		System.out.println("set Book setter called");
+		this.book = book;
+	}
+
+	@Override
+	public String toString() {
+		return "Library [libraryName=" + libraryName + ", book=" + book + "]";
+	}
+	
+	
+
+}
+
+
+
+-----------------------------service
+
+
+package anygroupid.wiprocc_sprjavabased.service;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import anygroupid.wiprocc_sprjavabased.configuration.MyAppConfig;
+import anygroupid.wiprocc_sprjavabased.model.Book;
+import anygroupid.wiprocc_sprjavabased.model.Library;
+
+public class BookService {
+
+	public static void main(String[] args) {
+	
+		
+		ApplicationContext factory=new AnnotationConfigApplicationContext(MyAppConfig.class);
+		
+		Library library= factory.getBean(Library.class);	
+		System.out.println(library);
+		
+		System.out.println(library.getAddress().getAddress());	
+		
+		
+		
+	}
+
+}
+
+
+-------------------homeAddress
+
+
+
+package anygroupid.wiprocc_sprjavabased.model;
+
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+//@Component("homeAddress")
+@Primary
+@Component
+public class HomeAddress implements Address{
+
+	@Override
+	public String getAddress() {
+		
+		return "Home Address";
+	}
+
+	
+	
+	
+}
