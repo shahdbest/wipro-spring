@@ -1,0 +1,55 @@
+
+--> Empployee 
+empId
+name
+dept
+city
+qualification  ugs /grads/post grads 
+gender
+rating 
+
+
+------------------> crud on employee , post , put , delete , get all ,get by id 
+
+
+--> find all empls by dept
+
+->  find all empls by dept  and city
+
+
+->  find all empls having rating > 4
+
+->  find all empls having rating > 4 and are post grads 
+
+->  find all empls who r under grads 
+
+
+->  find all empls having rating > 4 and city
+
+->  find all empls having rating < 3 in IT dept 
+
+->  find all empls having rating < 3 
+
+->  find all empls having rating < 3  and dept 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
