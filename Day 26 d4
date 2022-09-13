@@ -1,0 +1,82 @@
+create folder c->data->db
+mongod
+----------------------
+if u have data folder in d drive
+
+mongod --dbpath d:\\data
+
+--------------by def mongod runs on port 27017
+
+
+show dbs
+
+db 
+
+use wiprocc
+
+db
+
+show dbs
+
+db.createCollection("employees");
+
+show dbs
+
+show collections
+
+db.employees.drop();
+
+show collections
+
+db.author.insert(
+{
+"name":"john",
+"yob":1999
+}
+);
+
+
+db.author.find();
+
+
+db.author.find().pretty();
+
+
+
+db.author.insert(
+{
+"name":"rock",
+"yob":1990
+}
+);
+
+
+
+db.author.insert(
+{
+"name":"brock",
+"yob":1990,
+"city":"bangalore"
+}
+);
+
+
+select * from author 
+where yob =1999
+
+db.author.find(
+{
+"yob":1999
+}
+).pretty();
+
+
+db.author.insert(
+{
+"name":"hbk",
+"yob":1988,
+"city":"new york",
+"phone":[99887788,88775544]
+}
+);
+
