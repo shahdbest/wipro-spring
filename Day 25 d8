@@ -1,0 +1,9 @@
+
+db.author.find(
+{
+$and:[
+{"yob": {$gt:1987}},
+{"yob": {$lt:1999}}
+]
+}
+).pretty();
