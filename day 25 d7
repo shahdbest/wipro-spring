@@ -1,0 +1,109 @@
+
+select * from 
+author where yob > 1989
+
+//
+db.author.find(
+{
+"yob":1990
+}
+);
+
+
+db.author.find(
+{
+"yob": { $gt:1989}
+}
+);
+
+
+db.author.find(
+{
+"yob": { $gt:1990}
+}
+);
+
+
+db.author.find(
+{
+"yob": { $lt:1991}
+}
+);
+
+db.author.find(
+{
+"yob": { $lt:1991}
+}
+).pretty();
+
+
+
+db.author.find(
+{
+"yob": { $gt:1990}
+}
+);
+
+db.author.find(
+{
+"yob": { $gte:1990}
+}
+).pretty();
+
+
+db.author.find(
+{
+"yob": { $ne:1990}
+}
+).pretty();
+
+select * from author
+where yob in(1988,1999)
+
+
+db.author.find(
+{
+"yob": { $in:[1990,1988]}
+}
+).pretty();
+
+
+db.author.find(
+{
+"yob": { $nin:[1990,1988]}
+}
+).pretty();
+
+
+select * from author
+where yob=1990 and city="bangalore";
+
+db.author.find(
+{
+"yob": 1990,
+"city":"bangalore"
+}
+).pretty();
+
+
+db.author.insert(
+{
+"name":"hhh",
+"yob":1987,
+"city":"bangalore"
+}
+);
+
+
+select * from author
+where yob=1990 or city="bangalore";
+
+db.author.find(
+{
+$or:[
+{"yob":1990},
+{"city":"bangalore"}
+]
+}
+).pretty();
+
