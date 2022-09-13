@@ -1,0 +1,412 @@
+---------------model 
+
+package com.example.wiprob5h2crud.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class Author {
+
+	private String authorName;
+	
+	@Id // primary key 
+	private int authorId;
+	private String book;
+	
+	public String getAuthorName() {
+		return authorName;
+	}
+	public void setAuthorName(String authorName) {
+		this.authorName = authorName;
+	}
+	public int getAuthorId() {
+		return authorId;
+	}
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
+	}
+	public String getBook() {
+		return book;
+	}
+	public void setBook(String book) {
+		this.book = book;
+	}
+	
+	public Author() {
+		// TODO Auto-generated constructor stub
+	}
+	public Author(String authorName, int authorId, String book) {
+		super();
+		this.authorName = authorName;
+		this.authorId = authorId;
+		this.book = book;
+	}
+	@Override
+	public String toString() {
+		return "Author [authorName=" + authorName + ", authorId=" + authorId + ", book=" + book + "]";
+	}
+	
+	
+	
+}
+
+
+------------------------------------dao 
+
+package com.example.wiprob5h2crud.dao;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.example.wiprob5h2crud.model.Author;
+
+@Repository
+public interface AuthorDao extends CrudRepository<Author, Integer>{
+
+	
+	//public List<Author> findByAuthorName(String name);
+
+	//SQL
+	//JPQL
+	//																?			
+	@Query("select a from Author a where upper(a.authorName)=upper(:name)")
+	public List<Author> findByName(@Param("name") String name);
+
+	
+	public List<Author> findByBookIgnoreCase(String book); 
+	
+	public Author findByBookAndAuthorName(String book,String authorName); 
+
+
+}
+
+----------------------------------------------service 
+
+package com.example.wiprob5h2crud.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.wiprob5h2crud.exceptions.UserAlreadyRegisteredException;
+import com.example.wiprob5h2crud.model.Author;
+
+@Service
+public interface AuthorService {
+	
+	public Author saveAuthor(Author author) throws UserAlreadyRegisteredException;
+	
+	public List<Author> getAllAuthors();
+	public Author getAuthor(int authorId);
+	
+	public String deleteAuthor(int authorId);
+	
+	public Author updateAuthor(Author author);
+	
+	
+	public List<Author> getAuthorByName(String name);
+	public List<Author> findByBookIgnoreCase(String book); 
+	public Author findByBookAndAuthorName(String book,String authorName);
+}
+
+
+-------------------------impl 
+
+package com.example.wiprob5h2crud.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.wiprob5h2crud.dao.AuthorDao;
+import com.example.wiprob5h2crud.exceptions.UserAlreadyRegisteredException;
+import com.example.wiprob5h2crud.model.Author;
+@Service
+public class AuthorImpl implements AuthorService{
+
+	@Autowired
+	AuthorDao authorDao;
+	
+	@Override
+	public Author saveAuthor(Author author)throws UserAlreadyRegisteredException {
+		
+		Author foundAuthor=getAuthor(author.getAuthorId());
+		if(foundAuthor!=null)
+			throw new UserAlreadyRegisteredException();
+		
+	String name=	nameGenerator(author.getAuthorName());
+	author.setAuthorName(name);
+	return authorDao.save(author);
+	}
+
+	
+	
+	public String nameGenerator(String name)
+	{
+		
+		return name.toUpperCase();
+	}
+
+
+
+	@Override
+	public List<Author> getAllAuthors() {
+		
+		return (List<Author>) authorDao.findAll();
+	}
+	
+	@Override
+	public Author getAuthor(int authorId)
+	{
+		Optional<Author> authorOpt=authorDao.findById(authorId);
+			if(authorOpt.isPresent())
+				return authorOpt.get();
+			
+			return null;
+	}
+	
+	@Override
+	public String deleteAuthor(int authorId)
+	{
+		Author author= getAuthor(authorId);
+		if(author!=null)
+		{
+			authorDao.delete(author);
+			return "author deleted";
+		}
+		else
+			return "author cannot be deleted";
+	}
+	
+	@Override
+	public Author updateAuthor(Author author)
+	{
+		
+		return authorDao.save(author);
+	}
+
+	
+	@Override
+	public List<Author> getAuthorByName(String name)
+	{
+		
+		return authorDao.findByName(name);
+	}
+
+
+	public List<Author> findByBookIgnoreCase(String book)
+	{
+		
+		return authorDao.findByBookIgnoreCase(book);
+	}
+
+	public Author findByBookAndAuthorName(String book,String authorName)
+	{
+		return authorDao.findByBookAndAuthorName(book, authorName);
+	}
+	
+	
+
+}
+
+
+------------------------------------controller
+
+package com.example.wiprob5h2crud.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.wiprob5h2crud.exceptions.UserAlreadyRegisteredException;
+import com.example.wiprob5h2crud.model.Author;
+import com.example.wiprob5h2crud.service.AuthorService;
+
+@RestController
+@RequestMapping("authors")
+public class AuthorController {
+
+	@Autowired
+	AuthorService authorService;
+	
+	@PostMapping
+	public ResponseEntity<Author> saveAuthor(@RequestBody Author author)throws UserAlreadyRegisteredException
+	{
+		
+	Author savedAuthor=authorService.saveAuthor(author);
+	
+		return new ResponseEntity<Author>(savedAuthor,HttpStatus.CREATED);
+		
+	}
+	
+	
+	@GetMapping
+	public ResponseEntity<List<Author>> getAuthors()
+	{
+		
+	List<Author> authors=authorService.getAllAuthors();
+	
+		return new ResponseEntity<List<Author>>(authors,HttpStatus.FOUND);
+		
+	}
+	
+	@GetMapping("{authorId}")
+	public ResponseEntity<Object> getAuthor(@PathVariable int authorId)
+	{
+		
+	Author author=authorService.getAuthor(authorId);
+		
+			if(author!=null)
+		return new ResponseEntity<Object>(author,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+	
+
+	
+	@DeleteMapping("{authorId}")
+	public ResponseEntity<String> deleteAuthor(@PathVariable int authorId)
+	{
+		
+String result=authorService.deleteAuthor(authorId);
+		
+		return new ResponseEntity<String>(result,HttpStatus.OK);
+		
+		
+	}
+	
+
+	@PutMapping
+	public ResponseEntity<Author> updateAuthor(@RequestBody Author author)
+	{
+		
+	Author savedAuthor=authorService.updateAuthor(author);
+	
+		return new ResponseEntity<Author>(savedAuthor,HttpStatus.CREATED);
+		
+	}
+	
+
+
+	
+	@GetMapping("name/{name}")
+	public ResponseEntity<Object> getAuthor(@PathVariable String name)
+	{
+		
+	List<Author> authors=authorService.getAuthorByName(name);
+		
+			if(authors.size()!=0)
+		return new ResponseEntity<Object>(authors,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+
+	
+
+	@GetMapping("book/{book}")
+	public ResponseEntity<Object> getAuthorByBook(@PathVariable String book)
+	{
+		
+		List<Author> authors=authorService.findByBookIgnoreCase(book);
+		
+			if(authors.size()
+					!=0)
+		return new ResponseEntity<Object>(authors,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+
+	
+	@GetMapping("book/author/{book}/{authorName}")
+	public ResponseEntity<Object> getAuthorByBook(@PathVariable String book,@PathVariable String authorName)
+	{
+		
+Author author=authorService.findByBookAndAuthorName(book, authorName);
+		
+			if(author!=null)
+		return new ResponseEntity<Object>(author,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+	
+}
+
+
+
+
+---------------------------------------------exception 
+
+
+package com.example.wiprob5h2crud.exceptions;
+
+public class UserAlreadyRegisteredException extends Exception{
+
+	public UserAlreadyRegisteredException() {
+		super("User Already Registered");
+	}
+}
+
+
+----------------------------handler
+
+
+package com.example.wiprob5h2crud.exceptions;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+
+@ControllerAdvice
+@Component
+public class MyExceptionHandler {
+
+	@ExceptionHandler(UserAlreadyRegisteredException.class)
+	public ResponseEntity<String> AuthorRegisteredHandler()
+	{
+		return new ResponseEntity<String>("Author with the given author id already registered",HttpStatus.NOT_ACCEPTABLE);
+	}
+}
+------------------app.prop 
+#NOTE U CAN CHANGE THE APPILICATION PROPERTIES TO TARGET MY SQL DATABASE 
+server.port=1234
+spring.h2.console.enabled=true
+spring.datasource.url=jdbc:h2:mem:testdb
+
+
+
+
+
+
+
+
+
+
+
