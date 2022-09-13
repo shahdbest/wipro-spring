@@ -1,0 +1,4 @@
+--> create an exception for UserNotFound
+
+--> Throw the exception during delete 
+---> and handle it 
