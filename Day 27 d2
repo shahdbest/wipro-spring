@@ -1,0 +1,259 @@
+-------controller 
+package com.example.wiprob5h2crud.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.wiprob5h2crud.exceptions.UserAlreadyRegisteredException;
+import com.example.wiprob5h2crud.model.Author;
+import com.example.wiprob5h2crud.service.AuthorService;
+
+@CrossOrigin
+@RestController
+@RequestMapping("authors")
+public class AuthorController {
+
+	@Autowired
+	AuthorService authorService;
+	
+	@PostMapping
+	public ResponseEntity<Author> saveAuthor(@RequestBody Author author)throws UserAlreadyRegisteredException
+	{
+		
+	Author savedAuthor=authorService.saveAuthor(author);
+	
+		return new ResponseEntity<Author>(savedAuthor,HttpStatus.CREATED);
+		
+	}
+	
+	
+	@GetMapping
+	public ResponseEntity<List<Author>> getAuthors()
+	{
+		
+	List<Author> authors=authorService.getAllAuthors();
+	
+		return new ResponseEntity<List<Author>>(authors,HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("{authorId}")
+	public ResponseEntity<Object> getAuthor(@PathVariable int authorId)
+	{
+		
+	Author author=authorService.getAuthor(authorId);
+		
+			if(author!=null)
+		return new ResponseEntity<Object>(author,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+	
+
+	
+	@DeleteMapping("{authorId}")
+	public ResponseEntity<String> deleteAuthor(@PathVariable int authorId)
+	{
+		
+String result=authorService.deleteAuthor(authorId);
+		
+		return new ResponseEntity<String>(result,HttpStatus.OK);
+		
+		
+	}
+	
+
+	@PutMapping
+	public ResponseEntity<Author> updateAuthor(@RequestBody Author author)
+	{
+		
+	Author savedAuthor=authorService.updateAuthor(author);
+	
+		return new ResponseEntity<Author>(savedAuthor,HttpStatus.CREATED);
+		
+	}
+	
+
+
+	
+	@GetMapping("name/{name}")
+	public ResponseEntity<Object> getAuthor(@PathVariable String name)
+	{
+		
+	List<Author> authors=authorService.getAuthorByName(name);
+		
+			if(authors.size()!=0)
+		return new ResponseEntity<Object>(authors,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+
+	
+
+	@GetMapping("book/{book}")
+	public ResponseEntity<Object> getAuthorByBook(@PathVariable String book)
+	{
+		
+		List<Author> authors=authorService.findByBookIgnoreCase(book);
+		
+			if(authors.size()
+					!=0)
+		return new ResponseEntity<Object>(authors,HttpStatus.FOUND);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+
+	
+	@GetMapping("book/author/{book}/{authorName}")
+	public ResponseEntity<Object> getAuthorByBook(@PathVariable String book,@PathVariable String authorName)
+	{
+		
+Author author=authorService.findByBookAndAuthorName(book, authorName);
+		
+			if(author!=null)
+		return new ResponseEntity<Object>(author,HttpStatus.OK);
+		
+			else
+				return new ResponseEntity<Object>("Data Not FOund",HttpStatus.NOT_FOUND);		
+		
+	}
+	
+}
+
+
+----------------------------------------angular 
+export class Author
+{
+    authorName:string='';
+authorId:number=0;
+book:string='';
+}
+
+--------service 
+
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Author } from 'src/author.model';
+import { Book } from 'src/Book.model';
+import { GifImages } from 'src/gifs.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BooksService {
+
+  constructor(private http:HttpClient) { }
+
+
+  getAuthors()
+  {
+
+
+    return this.http.get<Author[]>('http://localhost:1234/authors');
+  }
+
+
+
+
+}
+
+
+---------------------------app.html 
+
+<!-- template driven forms  -->
+
+
+<table> 
+
+    <tr> 
+<th> Name </th>
+<th> Id </th>
+
+<th> Book </th>
+
+
+
+
+    </tr>
+<tr *ngFor="let author of authors"> 
+
+    <td> {{author.authorName}}</td> 
+
+    <td> {{author.authorId}}</td> 
+
+    <td> {{author.book}}</td> 
+
+</tr>
+
+
+</table>
+
+
+----ap.ts
+
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Article } from 'src/artice.model';
+import { Author } from 'src/author.model';
+import { Book } from 'src/Book.model';
+import { myValidator } from 'src/mycustom.validato';
+import { BooksService } from './books.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+
+  constructor(private bookService:BooksService)
+  {
+
+  }
+
+ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+  
+  this.getAuthors()
+}
+
+  authors:Author[]=[];
+getAuthors()
+{
+  
+  this.bookService.getAuthors().subscribe(
+    data=>{
+
+      this.authors=data;
+    },
+    error=>{
+      console.log(error)
+    }
+  )
+
+}
+
+}
+
+
+
