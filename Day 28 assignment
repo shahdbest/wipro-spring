@@ -1,0 +1,10 @@
+---add all the features to player model
+
+save
+findByid
+findall
+update
+delete
+
+
+-----------------------and create a new angular project to consume this restAPI
