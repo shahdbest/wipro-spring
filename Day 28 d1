@@ -1,0 +1,74 @@
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+
+
+-------------------main 
+
+package com.example.cccaching;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+
+@EnableCaching
+@SpringBootApplication
+public class Wiprob5CachingApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5CachingApplication.class, args);
+	}
+
+}
+
+
+
+--controler
+package com.example.cccaching;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("api")
+public class MyApi {
+
+	
+	@Cacheable("mycachemem")
+	@GetMapping
+	public String getData()
+	{
+		
+		
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return "hello form API";
+	}
+	
+	@CacheEvict("mycachemem")
+	@PostMapping
+	public String postData()
+	{
+		return "new data added";
+	}
+	
+	
+}
+-----------app.prop 
+
+
+
+
+server.port=1234
