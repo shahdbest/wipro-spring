@@ -1,0 +1,136 @@
+package com.example.mongocrud.dao;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.mongocrud.model.Player;
+
+@Repository
+public interface PlayerDao extends MongoRepository<Player, Integer>{
+
+
+	public Player findByPlayerName(String playerName);
+	
+	
+}
+
+
+--------------------------service
+
+
+package com.example.mongocrud.service;
+
+import org.springframework.stereotype.Service;
+
+import com.example.mongocrud.model.Player;
+
+@Service
+public interface PlayerService {
+
+	
+	public Player savePlayer(Player player);
+	public Player findById(int playerId);
+
+
+	public Player findByPlayerName(String playerName);
+	
+}
+--------impl 
+
+package com.example.mongocrud.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.mongocrud.dao.PlayerDao;
+import com.example.mongocrud.model.Player;
+
+@Service
+public class PlayerServiceImpl implements PlayerService{
+
+	@Autowired
+	PlayerDao playerDao;
+	
+	@Override
+	public Player savePlayer(Player player) {
+
+		return playerDao.save(player);
+	}
+
+	@Override
+	public Player findById(int playerId) {
+
+		Optional<Player> playerOpt= playerDao.findById(playerId);
+		if(playerOpt.isPresent())
+		return playerOpt.get();
+	
+		return null;
+	
+	}
+
+	
+	public Player findByPlayerName(String playerName)
+	{
+		
+		return playerDao.findByPlayerName(playerName);
+	}
+	
+}
+
+
+
+-----------controller
+
+
+package com.example.mongocrud.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.mongocrud.model.Player;
+import com.example.mongocrud.service.PlayerService;
+
+@RestController
+@RequestMapping("players")
+public class PlayerController {
+
+	@Autowired
+	PlayerService playerService;
+	
+	
+	@PostMapping
+	public ResponseEntity<Player> savePlayer(@RequestBody Player player)
+	{
+		
+		Player savedPlayer=playerService.savePlayer(player);
+		return new ResponseEntity<Player>(savedPlayer,HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("{playerId}")
+	public ResponseEntity<Player> getPlayer(@PathVariable int playerId)
+	{
+		
+		Player savedPlayer=playerService.findById(playerId);
+		return new ResponseEntity<Player>(savedPlayer,HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("name/{playerName}")
+	public ResponseEntity<Player> getPlayerByName(@PathVariable String playerName)
+	{
+		
+		Player savedPlayer=playerService.findByPlayerName(playerName);
+		return new ResponseEntity<Player>(savedPlayer,HttpStatus.OK);
+	}
+	
+}
