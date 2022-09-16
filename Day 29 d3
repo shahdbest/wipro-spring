@@ -1,0 +1,304 @@
+------------download a spring boot project with eureka server dependency 
+
+
+---------app.prop 
+
+server.port=8761
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+
+
+---------------------main 
+
+package com.example.wiprob5eurekaserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+//new line added
+@EnableEurekaServer
+@SpringBootApplication
+public class Wiprob5EurekaserverApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5EurekaserverApplication.class, args);
+	}
+
+}
+--------------------------------------
+
+open it in browser
+
+http://localhost:8761/
+
+
+
+------------------product service
+--------------------------------------------------------------------------------------pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.11</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>wiprob5-productservice</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>wiprob5-productservice</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>1.8</java.version>
+		<!--  newly added begins-->
+		<spring-cloud.version>2021.0.4</spring-cloud.version>
+	<!--  newly added ends-->
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+<!--  newly added begins-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+<!--  newly added ends-->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+<!--  newly added begins-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+<!--  newly added ends-->
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+----------------------------------main 
+
+package com.example.productservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Wiprob5ProductserviceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5ProductserviceApplication.class, args);
+	}
+
+}
+
+-------------app.prop 
+server.port=1111
+spring.application.name=product
+
+
+
+-------------------------------------------------purchase service 
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.11</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>wiprob5-purchaseservice</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>wiprob5-purchaseservice</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>1.8</java.version>
+		<!--  newly added begins-->
+		<spring-cloud.version>2021.0.4</spring-cloud.version>
+	<!--  newly added ends-->
+	
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+<!--  newly added begins-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+<!--  newly added ends-->
+
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+<!--  newly added begins-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+<!--  newly added ends-->
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+-------------------------------------main 
+
+package com.example.purchaseservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@EnableEurekaClient
+@SpringBootApplication
+public class Wiprob5PurchaseserviceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5PurchaseserviceApplication.class, args);
+	}
+
+	@Bean
+	@LoadBalanced
+	public RestTemplate getRestTemp()
+	{
+		return new RestTemplate();
+	}
+	
+}
+
+----------------------controller
+
+package com.example.purchaseservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.purchaseservice.model.Product;
+
+@RestController
+@RequestMapping("purchaseservice")
+public class PurchaseController {
+
+	//httpClient in angular
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@GetMapping("listprod")
+	public ResponseEntity<Product> getProdFromProdSrv()
+	{
+		Product product=restTemplate.getForObject("http://PRODUCT/productservice", Product.class);
+	return new ResponseEntity<Product>(product,HttpStatus.OK);
+	
+		}
+	
+	
+	@GetMapping("listprods")
+	public ResponseEntity<List<Product>> getProdsFromProdSrv()
+	{
+		List<Product> products=restTemplate.getForObject("http://PRODUCT/productservice/prods", List.class);
+	return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
+	
+		}
+	
+	
+}
+
+
+----------app.prop 
+
+
+server.port=5555
+spring.application.name=purchase
+---------------------------------------------------
+
+
+postman 
+
+http://localhost:1111/productservice/prods
+
+http://localhost:5555/purchaseservice/listprods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
