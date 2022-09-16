@@ -1,0 +1,209 @@
+-----download 2 spring boot projects with web dependency 
+
+
+----------------------product service 
+
+---product
+
+package com.example.productservice.model;
+
+public class Product {
+
+	int prodId;
+	String prodName;
+	float price;
+	public int getProdId() {
+		return prodId;
+	}
+	public void setProdId(int prodId) {
+		this.prodId = prodId;
+	}
+	public String getProdName() {
+		return prodName;
+	}
+	public void setProdName(String prodName) {
+		this.prodName = prodName;
+	}
+	public float getPrice() {
+		return price;
+	}
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	public Product() {
+		// TODO Auto-generated constructor stub
+	}
+	public Product(int prodId, String prodName, float price) {
+		super();
+		this.prodId = prodId;
+		this.prodName = prodName;
+		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "Product [prodId=" + prodId + ", prodName=" + prodName + ", price=" + price + "]";
+	}
+	
+	
+}
+
+
+----------------controller 
+
+package com.example.productservice.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.productservice.model.Product;
+
+@RestController
+@RequestMapping("productservice")
+public class ProductController {
+
+	
+	@GetMapping
+	public ResponseEntity<Product> getProd()
+	{
+		return new ResponseEntity<Product>(new Product(1, "Royal Enfield Hunter 350", 200000.0F),HttpStatus.OK);
+	}
+	
+	
+}
+
+-----------------app.prop 
+
+
+server.port=1111
+
+
+-----------------------------------------------purchaseService 
+
+
+-------model 
+
+package com.example.purchaseservice.model;
+
+public class Product {
+
+	int prodId;
+	String prodName;
+	float price;
+	public int getProdId() {
+		return prodId;
+	}
+	public void setProdId(int prodId) {
+		this.prodId = prodId;
+	}
+	public String getProdName() {
+		return prodName;
+	}
+	public void setProdName(String prodName) {
+		this.prodName = prodName;
+	}
+	public float getPrice() {
+		return price;
+	}
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	public Product() {
+		// TODO Auto-generated constructor stub
+	}
+	public Product(int prodId, String prodName, float price) {
+		super();
+		this.prodId = prodId;
+		this.prodName = prodName;
+		this.price = price;
+	}
+	@Override
+	public String toString() {
+		return "Product [prodId=" + prodId + ", prodName=" + prodName + ", price=" + price + "]";
+	}
+	
+	
+}
+
+
+--------------------controller
+
+package com.example.purchaseservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.purchaseservice.model.Product;
+
+@RestController
+@RequestMapping("purchaseservice")
+public class PurchaseController {
+
+	//httpClient in angular
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@GetMapping("listprod")
+	public ResponseEntity<Product> getProdFromProdSrv()
+	{
+		//1 way of doing
+		//ResponseEntity<Product> resProd=	restTemplate.getForEntity("http://localhost:1111/productservice", Product.class);
+		//return resProd;
+
+		//2nd way of doing it 
+	Product product=restTemplate.getForObject("http://localhost:1111/productservice", Product.class);
+	return new ResponseEntity<Product>(product,HttpStatus.OK);
+	
+		}
+	
+	
+}
+
+
+--------------------------------main
+
+package com.example.purchaseservice;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+@SpringBootApplication
+public class Wiprob5PurchaseserviceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5PurchaseserviceApplication.class, args);
+	}
+
+	@Bean
+	public RestTemplate getRestTemp()
+	{
+		return new RestTemplate();
+	}
+	
+}
+
+
+----------------------app.prop 
+
+
+server.port=5555
+
+
+
+
+
+
+
+
+
+
