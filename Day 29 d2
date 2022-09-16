@@ -1,0 +1,115 @@
+-----------product controller
+
+package com.example.productservice.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.productservice.model.Product;
+
+@RestController
+@RequestMapping("productservice")
+public class ProductController {
+
+	
+	@GetMapping
+	public ResponseEntity<Product> getProd()
+	{
+		return new ResponseEntity<Product>(new Product(1, "Royal Enfield Hunter 350", 200000.0F),HttpStatus.OK);
+	}
+
+	@GetMapping("/prods")
+	public ResponseEntity<List<Product>> getProds()
+	{
+	Product p1=	new Product(1, "Royal Enfield Hunter 350", 200000.0F);
+	Product p2=	new Product(2, "Royal Enfield Classic 350", 270000.0F);
+	Product p3=	new Product(3, "Royal Enfield  350", 275000.0F);
+		
+		List<Product> products= new ArrayList<>();
+		products.add(p3);
+		products.add(p2);
+		products.add(p1);
+		
+		return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
+	}
+
+	
+}
+
+
+
+--------------------purchase controler
+
+
+
+package com.example.purchaseservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.purchaseservice.model.Product;
+
+@RestController
+@RequestMapping("purchaseservice")
+public class PurchaseController {
+
+	//httpClient in angular
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@GetMapping("listprod")
+	public ResponseEntity<Product> getProdFromProdSrv()
+	{
+		Product product=restTemplate.getForObject("http://localhost:1111/productservice", Product.class);
+	return new ResponseEntity<Product>(product,HttpStatus.OK);
+	
+		}
+	
+	
+	@GetMapping("listprods")
+	public ResponseEntity<List<Product>> getProdsFromProdSrv()
+	{
+		List<Product> products=restTemplate.getForObject("http://localhost:1111/productservice/prods", List.class);
+	return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
+	
+		}
+	
+	
+}
+
+
+
+-------------------urls 
+get
+http://localhost:1111/productservice/prods
+get
+http://localhost:1111/productservice
+
+
+
+-----------------
+
+http://localhost:5555/purchaseservice/listprod
+
+http://localhost:5555/purchaseservice/listprods
+
+
+
+
+
+
+
