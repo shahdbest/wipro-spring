@@ -1,0 +1,116 @@
+--- download a plain spring boot project 
+
+---cpoy paste the below pom.xml in pom.xml 
+
+
+-----------------------pom.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.3.RELEASE</version>
+        <relativePath/>
+    </parent>
+	<groupId>com.example</groupId>
+	<artifactId>wiprob5-zuulApiGateway</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>wipro93-apigateway</name>
+	<description>Demo project for Spring Boot</description>
+		<properties>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>2020.0.3</spring-cloud.version>
+	</properties>
+	
+<dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zuul</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.marcosbarbero.cloud</groupId>
+            <artifactId>spring-cloud-zuul-ratelimit</artifactId>
+            <version>1.7.2.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Dalston.SR1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+--------------------------------------------------main 
+
+package com.example.zuulApiGateway;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+
+@EnableEurekaClient
+@EnableZuulProxy
+@SpringBootApplication
+public class Wiprob5ZuulApiGatewayApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Wiprob5ZuulApiGatewayApplication.class, args);
+	}
+
+}
+
+
+----------------app.prop 
+
+
+server.port=6666
+spring.application.name=apigateway
+
+zuul.routes.purchase.path=/purchaseservice/**
+zuul.routes.purchase.url=http://localhost:5555
+zuul.routes.purchase.strip-prefix=false
+
+
+---------------------------------------------url 
+
+
+access the purchase service which is actully running on port 5555 through apigateway runing on 66666
+
+http://localhost:6666/purchaseservice/info
+
+
+
+
+
+
+
+
+
